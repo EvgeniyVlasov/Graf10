@@ -194,13 +194,20 @@ int FindingPaths(int A[N][N], int n)
 	}
 }
 
-int visit(int A[N][N], int n, int vertex, int path[N], int path_length, int visited[N]) {
+//Функция нахождения нужного пути.
+static int visit(int A[N][N], int n, int vertex, int path[N], int path_length, int visited[N]) {
+	//Помечаем вершину посещённой.
 	visited[vertex] = 1;
+	//Переход на следующую вершину.
 	path[path_length] = vertex;
+	//Путь стал длиннее на 1 связь.
 	path_length++;
+	//Если пути больше нет...
 	if (path_length == n) {
 		int first_vertex = path[0];
 		int last_vertex = path[n-1];
+		//Если связь есть, то путь найден, иначе возвращаемся на предыдущую вершину
+		//и убираем текущую вершину из посещённых.
 		if (A[first_vertex][last_vertex] == 1) {
 			return 1;
 		}
@@ -211,13 +218,17 @@ int visit(int A[N][N], int n, int vertex, int path[N], int path_length, int visi
 			return 0;
 		}
 	}
+	//Находим следующий шаг пути.
 	for (int child = 0; child < n; child++) {
+		//Если связь есть и узел ещё не посещён, то если можно создать путь, то идём дальше.
 		if (A[vertex][child] == 1 && visited[child] == 0) {
 			if (visit(A, n, child, path, path_length, visited) == 1) {
 				return 1;
 			}
 		}
 	}
+	//Если следующий шаг пути не найден, то возвращаемся на предыдущую вершину
+	//и убираем текущую вершину из посещённых.
 	path_length--;
 	path[path_length] = -1;
 	visited[vertex] = 0;
